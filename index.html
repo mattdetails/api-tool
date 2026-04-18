@@ -693,41 +693,58 @@
       return `<span class="collapsible"><span class="toggle" onclick="toggleNode(this)">▼</span>{<span class="summary">${count}</span><span class="children">\n${items}\n${pad}</span>}</span>`;
     }
 
-    // Endpoints
-    let endpoints = JSON.parse(localStorage.getItem('api-tool-endpoints') || '[]');
+    // Endpoints — Supabase
+    const SB_URL = 'https://suxzkurzgwhqckmjtgfg.supabase.co';
+    const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN1eHprdXJ6Z3docWNrbWp0Z2ZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0ODM1OTgsImV4cCI6MjA5MjA1OTU5OH0._k-aHhhI-9MVbaEledtWIIx09NrNOoqDIuTaIIKGOBc';
+    const SB_HEADERS = {
+      'apikey': SB_KEY,
+      'Authorization': `Bearer ${SB_KEY}`,
+      'Content-Type': 'application/json'
+    };
 
-    function persistEndpoints() {
-      localStorage.setItem('api-tool-endpoints', JSON.stringify(endpoints));
+    let endpoints = [];
+
+    async function loadEndpoints() {
+      const res = await fetch(`${SB_URL}/rest/v1/endpoints?select=*&order=created_at.asc`, { headers: SB_HEADERS });
+      endpoints = await res.json();
+      renderEndpoints();
     }
 
-    function addEndpoint() {
+    async function addEndpoint() {
       const method = document.getElementById('method').value;
       const url = document.getElementById('url').value.trim();
       if (!url) {
-        const inp = document.getElementById('epNewUrl');
-        inp.focus();
         document.getElementById('epNewMethod').value = method;
+        document.getElementById('epNewUrl').focus();
         return;
       }
-      endpoints.push({ method, url });
-      persistEndpoints();
-      renderEndpoints();
+      await fetch(`${SB_URL}/rest/v1/endpoints`, {
+        method: 'POST',
+        headers: { ...SB_HEADERS, 'Prefer': 'return=representation' },
+        body: JSON.stringify({ method, url })
+      });
+      loadEndpoints();
     }
 
-    function addEndpointFromForm() {
+    async function addEndpointFromForm() {
       const method = document.getElementById('epNewMethod').value;
       const url = document.getElementById('epNewUrl').value.trim();
       if (!url) { document.getElementById('epNewUrl').focus(); return; }
-      endpoints.push({ method, url });
-      persistEndpoints();
-      renderEndpoints();
+      await fetch(`${SB_URL}/rest/v1/endpoints`, {
+        method: 'POST',
+        headers: { ...SB_HEADERS, 'Prefer': 'return=representation' },
+        body: JSON.stringify({ method, url })
+      });
       document.getElementById('epNewUrl').value = '';
+      loadEndpoints();
     }
 
-    function removeEndpoint(i) {
-      endpoints.splice(i, 1);
-      persistEndpoints();
-      renderEndpoints();
+    async function removeEndpoint(id) {
+      await fetch(`${SB_URL}/rest/v1/endpoints?id=eq.${id}`, {
+        method: 'DELETE',
+        headers: SB_HEADERS
+      });
+      loadEndpoints();
     }
 
     function selectEndpoint(i) {
@@ -738,7 +755,7 @@
 
     function renderEndpoints() {
       const list = document.getElementById('endpointsList');
-      if (endpoints.length === 0) {
+      if (!Array.isArray(endpoints) || endpoints.length === 0) {
         list.innerHTML = '<div class="ep-empty">No endpoints saved</div>';
         return;
       }
@@ -746,12 +763,12 @@
         <div class="ep-item" onclick="selectEndpoint(${i})">
           <span class="ep-method ep-${ep.method.toLowerCase()}">${ep.method}</span>
           <span class="ep-url">${escAttr(ep.url)}</span>
-          <button class="ep-remove" onclick="event.stopPropagation(); removeEndpoint(${i})" title="Remove">×</button>
+          <button class="ep-remove" onclick="event.stopPropagation(); removeEndpoint('${ep.id}')" title="Remove">×</button>
         </div>
       `).join('');
     }
 
-    renderEndpoints();
+    loadEndpoints();
 
     // Auth — SHA-256 of "changeme". Generate a new hash at: https://emn178.github.io/online-tools/sha256.html
     const PASSWORD_HASH = '057ba03d6c44104863dc7361fe4578965d1887360f90a0895882e58a6248fc86';

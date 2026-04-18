@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API Tool</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #1a1a2e;
+      color: #e0e0e0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      padding: 16px 24px;
+      background: #16213e;
+      border-bottom: 1px solid #0f3460;
+      font-size: 18px;
+      font-weight: 600;
+      color: #e94560;
+    }
+
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 24px;
+      gap: 16px;
+      overflow: hidden;
+    }
+
+    .request-panel {
+      background: #16213e;
+      border: 1px solid #0f3460;
+      border-radius: 8px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #8888aa;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+      min-width: 70px;
+    }
+
+    select, input {
+      background: #0f3460;
+      border: 1px solid #1a4a7a;
+      border-radius: 6px;
+      color: #e0e0e0;
+      padding: 8px 12px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    select:focus, input:focus {
+      border-color: #e94560;
+    }
+
+    select {
+      width: 110px;
+      cursor: pointer;
+    }
+
+    input.url {
+      flex: 1;
+      font-family: "SF Mono", "Fira Code", monospace;
+    }
+
+    .headers-section {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .headers-label-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .headers-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding-left: 80px;
+    }
+
+    .header-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    input.header-name {
+      width: 220px;
+      font-family: "SF Mono", "Fira Code", monospace;
+    }
+
+    input.header-value {
+      flex: 1;
+      font-family: "SF Mono", "Fira Code", monospace;
+    }
+
+    .proxy-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .proxy-row input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: #e94560;
+      cursor: pointer;
+    }
+
+    .proxy-row input.proxy-url {
+      font-family: "SF Mono", "Fira Code", monospace;
+      width: 240px;
+    }
+
+    .proxy-row input.proxy-url:disabled {
+      opacity: 0.35;
+    }
+
+    .proxy-status {
+      font-size: 12px;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    .proxy-on  { background: #1a4a2a; color: #4ade80; }
+    .proxy-off { background: #2a2a3a; color: #666688; }
+
+    button.add-header {
+      background: none;
+      border: 1px dashed #1a4a7a;
+      border-radius: 6px;
+      color: #8888aa;
+      cursor: pointer;
+      font-size: 13px;
+      padding: 5px 14px;
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    button.add-header:hover {
+      border-color: #e94560;
+      color: #e94560;
+    }
+
+    button.remove-header {
+      background: none;
+      border: none;
+      color: #445566;
+      cursor: pointer;
+      font-size: 18px;
+      line-height: 1;
+      padding: 2px 6px;
+      transition: color 0.2s;
+    }
+
+    button.remove-header:hover { color: #e94560; }
+
+    button.send {
+      background: #e94560;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 8px 24px;
+      transition: background 0.2s, opacity 0.2s;
+    }
+
+    button.send:hover { background: #c73652; }
+    button.send:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .response-panel {
+      flex: 1;
+      background: #16213e;
+      border: 1px solid #0f3460;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .response-header {
+      padding: 12px 20px;
+      border-bottom: 1px solid #0f3460;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .response-header span {
+      font-size: 13px;
+      font-weight: 600;
+      color: #8888aa;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .status-badge {
+      font-size: 13px;
+      font-weight: 700;
+      padding: 2px 10px;
+      border-radius: 4px;
+    }
+
+    .status-2xx { background: #1a4a2a; color: #4ade80; }
+    .status-3xx { background: #3a3a1a; color: #facc15; }
+    .status-4xx { background: #4a1a1a; color: #f87171; }
+    .status-5xx { background: #4a1a1a; color: #f87171; }
+    .status-err { background: #4a1a1a; color: #f87171; }
+
+    .time-badge {
+      font-size: 12px;
+      color: #8888aa;
+      margin-left: auto;
+    }
+
+    pre {
+      flex: 1;
+      overflow: auto;
+      padding: 16px 20px;
+      font-family: "SF Mono", "Fira Code", "Cascadia Code", monospace;
+      font-size: 13px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    .placeholder {
+      color: #445566;
+      font-style: italic;
+      font-family: -apple-system, sans-serif;
+      font-size: 14px;
+      padding: 40px 20px;
+    }
+
+    /* JSON syntax highlighting */
+    .json-key    { color: #79c0ff; }
+    .json-string { color: #a5d6ff; }
+    .json-number { color: #ff9e64; }
+    .json-bool   { color: #ff7b72; }
+    .json-null   { color: #8b949e; }
+  </style>
+</head>
+<body>
+  <header>API Tool</header>
+
+  <div class="main">
+    <div class="request-panel">
+      <div class="row">
+        <label>Method</label>
+        <select id="method">
+          <option>GET</option>
+          <option>POST</option>
+          <option>PUT</option>
+          <option>PATCH</option>
+          <option>DELETE</option>
+        </select>
+        <input id="url" class="url" type="url" placeholder="https://api.example.com/endpoint" />
+        <button class="send" id="sendBtn" onclick="sendRequest()">Send</button>
+      </div>
+      <div class="proxy-row">
+        <label style="min-width:70px">Proxy</label>
+        <input type="checkbox" id="proxyEnabled" onchange="toggleProxy()" />
+        <input type="text" class="proxy-url" id="proxyUrl" value="http://localhost:3001" disabled />
+        <span class="proxy-status proxy-off" id="proxyStatus">off</span>
+      </div>
+
+      <div class="headers-section">
+        <div class="headers-label-row">
+          <label style="min-width:70px">Headers</label>
+          <button class="add-header" onclick="addHeaderRow()">+ Add Header</button>
+        </div>
+        <div class="headers-list" id="headersList">
+          <!-- rows injected by JS -->
+        </div>
+      </div>
+    </div>
+
+    <div class="response-panel">
+      <div class="response-header">
+        <span>Response</span>
+        <span id="statusBadge" class="status-badge" style="display:none"></span>
+        <span id="timeBadge" class="time-badge" style="display:none"></span>
+      </div>
+      <pre id="responseBody"><span class="placeholder">Response will appear here...</span></pre>
+    </div>
+  </div>
+
+  <script>
+    function addHeaderRow(name = '', value = '') {
+      const list = document.getElementById('headersList');
+      const row = document.createElement('div');
+      row.className = 'header-row';
+      row.innerHTML = `
+        <input class="header-name" type="text" placeholder="Header name" value="${escAttr(name)}" />
+        <input class="header-value" type="text" placeholder="Value" value="${escAttr(value)}" />
+        <button class="remove-header" onclick="this.parentElement.remove()" title="Remove">×</button>
+      `;
+      list.appendChild(row);
+      if (!name) row.querySelector('.header-name').focus();
+    }
+
+    function escAttr(s) {
+      return s.replace(/"/g, '&quot;').replace(/</g, '&lt;');
+    }
+
+    function toggleProxy() {
+      const enabled = document.getElementById('proxyEnabled').checked;
+      const urlInput = document.getElementById('proxyUrl');
+      const status = document.getElementById('proxyStatus');
+      urlInput.disabled = !enabled;
+      status.textContent = enabled ? 'on' : 'off';
+      status.className = 'proxy-status ' + (enabled ? 'proxy-on' : 'proxy-off');
+    }
+
+    // Initialise with two default rows
+    addHeaderRow('Apikey', '');
+    addHeaderRow('Content-Type', 'application/json');
+
+    async function sendRequest() {
+      const method = document.getElementById('method').value;
+      const url = document.getElementById('url').value.trim();
+      const useProxy = document.getElementById('proxyEnabled').checked;
+      const proxyBase = document.getElementById('proxyUrl').value.trim();
+      const btn = document.getElementById('sendBtn');
+      const body = document.getElementById('responseBody');
+      const statusBadge = document.getElementById('statusBadge');
+      const timeBadge = document.getElementById('timeBadge');
+
+      if (!url) { alert('Please enter a URL.'); return; }
+      if (useProxy && !proxyBase) { alert('Please enter a proxy URL.'); return; }
+
+      btn.disabled = true;
+      btn.textContent = 'Sending…';
+      body.innerHTML = '<span class="placeholder">Loading…</span>';
+      statusBadge.style.display = 'none';
+      timeBadge.style.display = 'none';
+
+      const headers = {};
+      document.querySelectorAll('#headersList .header-row').forEach(row => {
+        const name  = row.querySelector('.header-name').value.trim();
+        const value = row.querySelector('.header-value').value.trim();
+        if (name && value) headers[name] = value;
+      });
+
+      const start = performance.now();
+      try {
+        let res;
+        if (useProxy) {
+          res = await fetch(`${proxyBase}/proxy`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ url, method, headers }),
+          });
+        } else {
+          res = await fetch(url, { method, headers });
+        }
+        const elapsed = Math.round(performance.now() - start);
+        const text = await res.text();
+
+        // Status badge
+        statusBadge.textContent = `${res.status} ${res.statusText}`;
+        const cls = res.status < 300 ? '2xx' : res.status < 400 ? '3xx' : res.status < 500 ? '4xx' : '5xx';
+        statusBadge.className = `status-badge status-${cls}`;
+        statusBadge.style.display = '';
+
+        // Time badge
+        timeBadge.textContent = `${elapsed} ms`;
+        timeBadge.style.display = '';
+
+        // Try to parse and highlight JSON
+        try {
+          const json = JSON.parse(text);
+          body.innerHTML = syntaxHighlight(JSON.stringify(json, null, 2));
+        } catch {
+          body.textContent = text;
+        }
+      } catch (err) {
+        const elapsed = Math.round(performance.now() - start);
+        statusBadge.textContent = 'Error';
+        statusBadge.className = 'status-badge status-err';
+        statusBadge.style.display = '';
+        timeBadge.textContent = `${elapsed} ms`;
+        timeBadge.style.display = '';
+        body.textContent = `Request failed:\n${err.message}\n\nNote: Some APIs block browser requests due to CORS policy.`;
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Send';
+      }
+    }
+
+    function syntaxHighlight(json) {
+      return json
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(
+          /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g,
+          (match) => {
+            let cls = 'json-number';
+            if (/^"/.test(match)) {
+              cls = /:$/.test(match) ? 'json-key' : 'json-string';
+            } else if (/true|false/.test(match)) {
+              cls = 'json-bool';
+            } else if (/null/.test(match)) {
+              cls = 'json-null';
+            }
+            return `<span class="${cls}">${match}</span>`;
+          }
+        );
+    }
+
+    // Allow Enter key to send
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) sendRequest();
+    });
+  </script>
+</body>
+</html>

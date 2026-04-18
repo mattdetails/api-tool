@@ -255,15 +255,30 @@
     .ep-patch  { background: #2a1a3a; color: #c084fc; }
     .ep-delete { background: #3a1a1a; color: #f87171; }
 
-    .ep-url {
+    .ep-label {
       flex: 1;
-      font-size: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+    }
+
+    .ep-name {
+      font-size: 13px;
+      color: #e0e0e0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .ep-url {
+      font-size: 11px;
       font-family: "SF Mono", "Fira Code", monospace;
       color: #aabbcc;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-      min-width: 0;
+      opacity: 0.7;
     }
 
     .ep-remove {
@@ -528,6 +543,159 @@
     .json-bool   { color: #ff7b72; }
     .json-null   { color: #8b949e; }
 
+    /* Collection settings modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9997;
+    }
+    .modal-box {
+      background: #061313;
+      border: 1px solid #004747;
+      border-radius: 10px;
+      padding: 28px;
+      width: 100%;
+      max-width: 460px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    .modal-box h3 {
+      color: #fff;
+      font-size: 15px;
+      font-weight: 600;
+    }
+    .modal-field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .modal-field > label {
+      font-size: 11px;
+      min-width: unset;
+    }
+    .modal-field input { width: 100%; }
+    .modal-header-row { display: flex; gap: 6px; align-items: center; }
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      padding-top: 4px;
+    }
+    .btn-secondary {
+      background: #004747;
+      border: none;
+      border-radius: 6px;
+      color: #e0e0e0;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 8px 16px;
+      transition: background 0.2s;
+    }
+    .btn-secondary:hover { background: #006060; }
+    .btn-primary {
+      background: #00bfbf;
+      border: none;
+      border-radius: 6px;
+      color: #061313;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 8px 16px;
+      transition: background 0.2s;
+    }
+    .btn-primary:hover { background: #009999; }
+
+    /* Collections sidebar */
+    .collection-item { border-bottom: 1px solid #004747; }
+    .collection-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 12px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .collection-header:hover { background: #004747; }
+    .coll-toggle { color: #fff; font-size: 9px; width: 10px; flex-shrink: 0; }
+    .coll-name {
+      flex: 1;
+      font-size: 13px;
+      font-weight: 600;
+      color: #fff;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .coll-actions { display: flex; gap: 2px; opacity: 0; transition: opacity 0.15s; }
+    .collection-header:hover .coll-actions { opacity: 1; }
+    .coll-btn {
+      background: none;
+      border: none;
+      color: #aabbcc;
+      cursor: pointer;
+      font-size: 24px;
+      padding: 2px 5px;
+      border-radius: 3px;
+      transition: color 0.15s, background 0.15s;
+    }
+    .coll-btn:hover { color: #fff; background: rgba(255,255,255,0.08); }
+    .coll-btn.danger:hover { color: #f87171; background: rgba(248,113,113,0.1); }
+    .ep-item.indented { padding-left: 28px; border-bottom: 1px solid #031a1a; }
+    .coll-add-ep-row {
+      padding: 7px 12px 7px 28px;
+      font-size: 12px;
+      color: #aabbcc;
+      cursor: pointer;
+      transition: color 0.15s;
+    }
+    .coll-add-ep-row:hover { color: #00bfbf; }
+    .coll-ep-form {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding: 8px 12px 10px 12px;
+      background: #031010;
+      border-top: 1px solid #004747;
+    }
+    .coll-ep-form.indented { padding-left: 28px; }
+    .coll-ep-form-actions { display: flex; gap: 6px; }
+    .coll-add-form {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding: 10px 12px;
+      border-top: 1px solid #004747;
+      flex-shrink: 0;
+    }
+    .collection-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 0 2px;
+      font-size: 12px;
+      color: #aabbcc;
+      border-bottom: 1px solid #004747;
+      padding-bottom: 10px;
+    }
+    .badge-coll-name { color: #00bfbf; font-weight: 600; }
+    .badge-base-url {
+      font-family: "SF Mono", "Fira Code", monospace;
+      font-size: 11px;
+      color: #aabbcc;
+      opacity: 0.7;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
     /* Collapsible nodes */
     .toggle {
       cursor: pointer;
@@ -546,6 +714,29 @@
   </style>
 </head>
 <body>
+  <div class="modal-overlay" id="collSettingsModal" style="display:none">
+    <div class="modal-box">
+      <h3>Collection Settings</h3>
+      <div class="modal-field">
+        <label>Name</label>
+        <input id="csName" type="text" placeholder="My API" />
+      </div>
+      <div class="modal-field">
+        <label>Base URL</label>
+        <input id="csBaseUrl" type="text" placeholder="https://api.example.com" style="font-family: 'SF Mono','Fira Code',monospace; font-size:13px" />
+      </div>
+      <div class="modal-field">
+        <label>Headers</label>
+        <div id="csHeadersList" style="display:flex;flex-direction:column;gap:6px"></div>
+        <button class="btn-secondary" style="align-self:flex-start;margin-top:4px" onclick="addCsHeaderRow()">+ Add Header</button>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closeCollSettings()">Cancel</button>
+        <button class="btn-primary" onclick="saveCollSettings()">Save</button>
+      </div>
+    </div>
+  </div>
+
   <div class="confirm-overlay" id="confirmOverlay" style="display:none">
     <div class="confirm-box">
       <p>Remove <strong id="confirmUrl"></strong>?</p>
@@ -570,24 +761,22 @@
   <div class="main">
     <div class="sidebar">
       <div class="sidebar-header">
-        <span>Endpoints</span>
+        <span>Collections</span>
       </div>
-      <div class="endpoints-list" id="endpointsList"></div>
-      <div class="ep-add-form">
-        <select id="epNewMethod" class="ep-new-method">
-          <option>GET</option>
-          <option>POST</option>
-          <option>PUT</option>
-          <option>PATCH</option>
-          <option>DELETE</option>
-        </select>
-        <input id="epNewUrl" class="ep-new-url" type="text" placeholder="https://..." onkeydown="if(event.key==='Enter') addEndpointFromForm()" />
-        <button class="ep-add-confirm" onclick="addEndpointFromForm()">Add</button>
+      <div class="endpoints-list" id="collectionsList"></div>
+      <div class="coll-add-form">
+        <input id="newCollName" class="ep-new-url" type="text" placeholder="Collection name" onkeydown="if(event.key==='Enter') addCollection()" />
+        <button class="ep-add-confirm" onclick="addCollection()">Add Collection</button>
       </div>
     </div>
 
     <div class="content">
     <div class="request-panel">
+      <div class="collection-badge" id="collectionBadge" style="display:none">
+        <span>Collection:</span>
+        <span class="badge-coll-name" id="badgeCollName"></span>
+        <span class="badge-base-url" id="badgeBaseUrl"></span>
+      </div>
       <div class="row">
         <label>Method</label>
         <select id="method">
@@ -681,7 +870,20 @@
       statusBadge.style.display = 'none';
       timeBadge.style.display = 'none';
 
+      // Resolve URL: prepend collection base_url if URL is a path
+      const activeColl = collections.find(c => c.id === activeCollectionId);
+      let finalUrl = url;
+      if (activeColl && activeColl.base_url && !/^https?:\/\//i.test(url)) {
+        finalUrl = activeColl.base_url.replace(/\/$/, '') + '/' + url.replace(/^\//, '');
+      }
+
+      // Merge headers: collection first, request headers override
       const headers = {};
+      if (activeColl) {
+        (activeColl.collection_headers || []).forEach(h => {
+          if (h.name && h.value) headers[h.name] = h.value;
+        });
+      }
       document.querySelectorAll('#headersList .header-row').forEach(row => {
         const name  = row.querySelector('.header-name').value.trim();
         const value = row.querySelector('.header-value').value.trim();
@@ -695,10 +897,10 @@
           res = await fetch(`${proxyBase}/proxy`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ url, method, headers }),
+            body: JSON.stringify({ url: finalUrl, method, headers }),
           });
         } else {
-          res = await fetch(url, { method, headers });
+          res = await fetch(finalUrl, { method, headers });
         }
         const elapsed = Math.round(performance.now() - start);
         const text = await res.text();
@@ -767,7 +969,7 @@
       return `<span class="collapsible"><span class="toggle" onclick="toggleNode(this)">▼</span>{<span class="summary">${count}</span><span class="children">\n${items}\n${pad}</span>}</span>`;
     }
 
-    // Endpoints — Supabase
+    // Collections — Supabase
     const SB_URL = 'https://suxzkurzgwhqckmjtgfg.supabase.co';
     const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN1eHprdXJ6Z3docWNrbWp0Z2ZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0ODM1OTgsImV4cCI6MjA5MjA1OTU5OH0._k-aHhhI-9MVbaEledtWIIx09NrNOoqDIuTaIIKGOBc';
     const SB_HEADERS = {
@@ -776,53 +978,188 @@
       'Content-Type': 'application/json'
     };
 
-    let endpoints = [];
+    let collections = [];
+    let activeCollectionId = null;
+    let expandedCollections = new Set();
+    let addingEpToCollection = null;
+    let editingEndpointId = null;
 
-    async function loadEndpoints() {
-      const res = await fetch(`${SB_URL}/rest/v1/endpoints?select=*&order=created_at.asc`, { headers: SB_HEADERS });
-      endpoints = await res.json();
-      renderEndpoints();
+    async function loadCollections() {
+      const res = await fetch(
+        `${SB_URL}/rest/v1/collections?select=*,collection_headers(*),endpoints(*)&order=created_at.asc`,
+        { headers: SB_HEADERS }
+      );
+      const data = await res.json();
+      collections = (Array.isArray(data) ? data : []).map(c => ({
+        ...c,
+        endpoints: (c.endpoints || []).sort((a, b) => new Date(a.created_at) - new Date(b.created_at)),
+        collection_headers: c.collection_headers || []
+      }));
+      renderCollections();
+      updateCollectionBadge();
     }
 
-    async function addEndpoint() {
-      const method = document.getElementById('method').value;
-      const url = document.getElementById('url').value.trim();
-      if (!url) {
-        document.getElementById('epNewMethod').value = method;
-        document.getElementById('epNewUrl').focus();
+    function renderCollections() {
+      const list = document.getElementById('collectionsList');
+      if (!collections.length) {
+        list.innerHTML = '<div class="ep-empty">No collections yet</div>';
         return;
       }
+      list.innerHTML = collections.map((coll) => {
+        const expanded = expandedCollections.has(coll.id);
+        const eps = coll.endpoints || [];
+        const showForm = addingEpToCollection === coll.id;
+        return `
+          <div class="collection-item">
+            <div class="collection-header" onclick="toggleCollection('${coll.id}')">
+              <span class="coll-toggle">${expanded ? '▼' : '▶'}</span>
+              <span class="coll-name">${escAttr(coll.name)}</span>
+              <div class="coll-actions">
+                <button class="coll-btn" onclick="event.stopPropagation(); openCollSettings('${coll.id}')" title="Settings">⚙</button>
+                <button class="coll-btn danger" onclick="event.stopPropagation(); confirmDeleteCollection('${coll.id}', '${escAttr(coll.name)}')" title="Delete">×</button>
+              </div>
+            </div>
+            ${expanded ? `<div class="collection-body">
+              ${eps.length === 0 && !showForm ? '<div class="ep-empty" style="padding-left:28px;padding-top:8px;padding-bottom:8px">No endpoints</div>' : ''}
+              ${eps.map((ep, ei) => editingEndpointId === ep.id ? `
+                <div class="coll-ep-form indented">
+                  <input id="eef_name_${ep.id}" class="ep-new-url" type="text" placeholder="Name (optional)" value="${escAttr(ep.name || '')}" />
+                  <select id="eef_method_${ep.id}" class="ep-new-method" style="width:100%">
+                    <option${ep.method==='GET'?' selected':''}>GET</option><option${ep.method==='POST'?' selected':''}>POST</option><option${ep.method==='PUT'?' selected':''}>PUT</option><option${ep.method==='PATCH'?' selected':''}>PATCH</option><option${ep.method==='DELETE'?' selected':''}>DELETE</option>
+                  </select>
+                  <input id="eef_url_${ep.id}" class="ep-new-url" type="text" placeholder="/path or https://..." value="${escAttr(ep.url || '')}" onkeydown="if(event.key==='Enter') saveEditEndpoint('${ep.id}')" />
+                  <div class="coll-ep-form-actions">
+                    <button class="ep-add-confirm" style="flex:1" onclick="saveEditEndpoint('${ep.id}')">Save</button>
+                    <button class="btn-secondary" style="flex:1" onclick="cancelEditEndpoint()">Cancel</button>
+                  </div>
+                </div>
+              ` : `
+                <div class="ep-item indented" onclick="selectEndpoint('${coll.id}', ${ei})">
+                  <span class="ep-method ep-${ep.method.toLowerCase()}">${ep.method}</span>
+                  <span class="ep-label">
+                    <span class="ep-name">${escAttr(ep.name || ep.url)}</span>
+                    ${ep.name ? `<span class="ep-url">${escAttr(ep.url)}</span>` : ''}
+                  </span>
+                  <button class="ep-remove" onclick="event.stopPropagation(); startEditEndpoint('${ep.id}')" title="Edit" style="font-size:14px">✏</button>
+                  <button class="ep-remove" onclick="event.stopPropagation(); removeEndpoint('${ep.id}', '${escAttr(ep.name || ep.url)}')" title="Remove">×</button>
+                </div>
+              `).join('')}
+              ${showForm ? `
+                <div class="coll-ep-form">
+                  <input id="epf_name_${coll.id}" class="ep-new-url" type="text" placeholder="Name (optional)" />
+                  <select id="epf_method_${coll.id}" class="ep-new-method" style="width:100%">
+                    <option>GET</option><option>POST</option><option>PUT</option><option>PATCH</option><option>DELETE</option>
+                  </select>
+                  <input id="epf_url_${coll.id}" class="ep-new-url" type="text" placeholder="/path or https://..." onkeydown="if(event.key==='Enter') saveNewEndpoint('${coll.id}')" />
+                  <div class="coll-ep-form-actions">
+                    <button class="ep-add-confirm" style="flex:1" onclick="saveNewEndpoint('${coll.id}')">Add</button>
+                    <button class="btn-secondary" style="flex:1" onclick="cancelAddEndpoint()">Cancel</button>
+                  </div>
+                </div>
+              ` : `<div class="coll-add-ep-row" onclick="startAddEndpoint('${coll.id}')">+ Add Endpoint</div>`}
+            </div>` : ''}
+          </div>`;
+      }).join('');
+
+      // Focus new endpoint form if open
+      if (addingEpToCollection) {
+        setTimeout(() => {
+          const el = document.getElementById(`epf_name_${addingEpToCollection}`);
+          if (el) el.focus();
+        }, 0);
+      }
+      if (editingEndpointId) {
+        setTimeout(() => {
+          const el = document.getElementById(`eef_name_${editingEndpointId}`);
+          if (el) el.focus();
+        }, 0);
+      }
+    }
+
+    function toggleCollection(id) {
+      expandedCollections.has(id) ? expandedCollections.delete(id) : expandedCollections.add(id);
+      renderCollections();
+    }
+
+    function startAddEndpoint(collectionId) {
+      expandedCollections.add(collectionId);
+      addingEpToCollection = collectionId;
+      renderCollections();
+    }
+
+    function cancelAddEndpoint() {
+      addingEpToCollection = null;
+      renderCollections();
+    }
+
+    function startEditEndpoint(id) {
+      addingEpToCollection = null;
+      editingEndpointId = id;
+      renderCollections();
+    }
+
+    function cancelEditEndpoint() {
+      editingEndpointId = null;
+      renderCollections();
+    }
+
+    async function saveEditEndpoint(id) {
+      const name = document.getElementById(`eef_name_${id}`).value.trim();
+      const method = document.getElementById(`eef_method_${id}`).value;
+      const url = document.getElementById(`eef_url_${id}`).value.trim();
+      if (!url) { document.getElementById(`eef_url_${id}`).focus(); return; }
+      await fetch(`${SB_URL}/rest/v1/endpoints?id=eq.${id}`, {
+        method: 'PATCH',
+        headers: { ...SB_HEADERS, 'Prefer': 'return=representation' },
+        body: JSON.stringify({ name: name || null, method, url })
+      });
+      editingEndpointId = null;
+      loadCollections();
+    }
+
+    async function saveNewEndpoint(collectionId) {
+      const name = document.getElementById(`epf_name_${collectionId}`).value.trim();
+      const method = document.getElementById(`epf_method_${collectionId}`).value;
+      const url = document.getElementById(`epf_url_${collectionId}`).value.trim();
+      if (!url) { document.getElementById(`epf_url_${collectionId}`).focus(); return; }
       await fetch(`${SB_URL}/rest/v1/endpoints`, {
         method: 'POST',
         headers: { ...SB_HEADERS, 'Prefer': 'return=representation' },
-        body: JSON.stringify({ method, url })
+        body: JSON.stringify({ name: name || null, method, url, collection_id: collectionId })
       });
-      loadEndpoints();
+      addingEpToCollection = null;
+      loadCollections();
     }
 
-    async function addEndpointFromForm() {
-      const method = document.getElementById('epNewMethod').value;
-      const url = document.getElementById('epNewUrl').value.trim();
-      if (!url) { document.getElementById('epNewUrl').focus(); return; }
-      await fetch(`${SB_URL}/rest/v1/endpoints`, {
-        method: 'POST',
-        headers: { ...SB_HEADERS, 'Prefer': 'return=representation' },
-        body: JSON.stringify({ method, url })
-      });
-      document.getElementById('epNewUrl').value = '';
-      loadEndpoints();
+    function selectEndpoint(collectionId, epIndex) {
+      const coll = collections.find(c => c.id === collectionId);
+      if (!coll) return;
+      const ep = coll.endpoints[epIndex];
+      activeCollectionId = collectionId;
+      document.getElementById('method').value = ep.method;
+      document.getElementById('url').value = ep.url;
+      updateCollectionBadge();
     }
 
-    function removeEndpoint(id, url) {
-      document.getElementById('confirmUrl').textContent = url;
+    function updateCollectionBadge() {
+      const badge = document.getElementById('collectionBadge');
+      const coll = collections.find(c => c.id === activeCollectionId);
+      if (coll) {
+        badge.style.display = 'flex';
+        document.getElementById('badgeCollName').textContent = coll.name;
+        document.getElementById('badgeBaseUrl').textContent = coll.base_url || '';
+      } else {
+        badge.style.display = 'none';
+      }
+    }
+
+    function removeEndpoint(id, label) {
+      document.getElementById('confirmUrl').textContent = label;
       document.getElementById('confirmOverlay').style.display = 'flex';
       document.getElementById('confirmDeleteBtn').onclick = async () => {
         closeConfirm();
-        await fetch(`${SB_URL}/rest/v1/endpoints?id=eq.${id}`, {
-          method: 'DELETE',
-          headers: SB_HEADERS
-        });
-        loadEndpoints();
+        await fetch(`${SB_URL}/rest/v1/endpoints?id=eq.${id}`, { method: 'DELETE', headers: SB_HEADERS });
+        loadCollections();
       };
     }
 
@@ -830,28 +1167,99 @@
       document.getElementById('confirmOverlay').style.display = 'none';
     }
 
-    function selectEndpoint(i) {
-      const ep = endpoints[i];
-      document.getElementById('method').value = ep.method;
-      document.getElementById('url').value = ep.url;
+    // Collection CRUD
+    async function addCollection() {
+      const name = document.getElementById('newCollName').value.trim();
+      if (!name) { document.getElementById('newCollName').focus(); return; }
+      await fetch(`${SB_URL}/rest/v1/collections`, {
+        method: 'POST',
+        headers: { ...SB_HEADERS, 'Prefer': 'return=representation' },
+        body: JSON.stringify({ name, base_url: '' })
+      });
+      document.getElementById('newCollName').value = '';
+      loadCollections();
     }
 
-    function renderEndpoints() {
-      const list = document.getElementById('endpointsList');
-      if (!Array.isArray(endpoints) || endpoints.length === 0) {
-        list.innerHTML = '<div class="ep-empty">No endpoints saved</div>';
-        return;
+    function confirmDeleteCollection(id, name) {
+      document.getElementById('confirmUrl').textContent = name;
+      document.getElementById('confirmOverlay').style.display = 'flex';
+      document.getElementById('confirmDeleteBtn').onclick = async () => {
+        closeConfirm();
+        await fetch(`${SB_URL}/rest/v1/collections?id=eq.${id}`, { method: 'DELETE', headers: SB_HEADERS });
+        if (activeCollectionId === id) { activeCollectionId = null; updateCollectionBadge(); }
+        expandedCollections.delete(id);
+        loadCollections();
+      };
+    }
+
+    // Collection settings modal
+    let editingCollectionId = null;
+
+    function openCollSettings(id) {
+      editingCollectionId = id;
+      const coll = collections.find(c => c.id === id);
+      if (!coll) return;
+      document.getElementById('csName').value = coll.name;
+      document.getElementById('csBaseUrl').value = coll.base_url || '';
+      const list = document.getElementById('csHeadersList');
+      list.innerHTML = '';
+      (coll.collection_headers || []).forEach(h => addCsHeaderRow(h.name, h.value));
+      document.getElementById('collSettingsModal').style.display = 'flex';
+      document.getElementById('csName').focus();
+    }
+
+    function closeCollSettings() {
+      document.getElementById('collSettingsModal').style.display = 'none';
+      editingCollectionId = null;
+    }
+
+    function addCsHeaderRow(name = '', value = '') {
+      const list = document.getElementById('csHeadersList');
+      const row = document.createElement('div');
+      row.className = 'modal-header-row';
+      row.innerHTML = `
+        <input class="cs-hname" type="text" placeholder="Header name" value="${escAttr(name)}" style="flex:1" />
+        <input class="cs-hvalue" type="text" placeholder="Value" value="${escAttr(value)}" style="flex:2" />
+        <button class="remove-header" onclick="this.parentElement.remove()">×</button>
+      `;
+      list.appendChild(row);
+      if (!name) row.querySelector('.cs-hname').focus();
+    }
+
+    async function saveCollSettings() {
+      const id = editingCollectionId;
+      const name = document.getElementById('csName').value.trim();
+      const base_url = document.getElementById('csBaseUrl').value.trim();
+      if (!name) { document.getElementById('csName').focus(); return; }
+
+      await fetch(`${SB_URL}/rest/v1/collections?id=eq.${id}`, {
+        method: 'PATCH', headers: SB_HEADERS,
+        body: JSON.stringify({ name, base_url })
+      });
+
+      // Replace all headers: delete then re-insert
+      await fetch(`${SB_URL}/rest/v1/collection_headers?collection_id=eq.${id}`, {
+        method: 'DELETE', headers: SB_HEADERS
+      });
+      const newHeaders = [];
+      document.querySelectorAll('#csHeadersList .modal-header-row').forEach(row => {
+        const hName = row.querySelector('.cs-hname').value.trim();
+        const hValue = row.querySelector('.cs-hvalue').value.trim();
+        if (hName) newHeaders.push({ collection_id: id, name: hName, value: hValue });
+      });
+      if (newHeaders.length) {
+        await fetch(`${SB_URL}/rest/v1/collection_headers`, {
+          method: 'POST',
+          headers: { ...SB_HEADERS, 'Prefer': 'return=representation' },
+          body: JSON.stringify(newHeaders)
+        });
       }
-      list.innerHTML = endpoints.map((ep, i) => `
-        <div class="ep-item" onclick="selectEndpoint(${i})">
-          <span class="ep-method ep-${ep.method.toLowerCase()}">${ep.method}</span>
-          <span class="ep-url">${escAttr(ep.url)}</span>
-          <button class="ep-remove" onclick="event.stopPropagation(); removeEndpoint('${ep.id}', '${escAttr(ep.url)}')" title="Remove">×</button>
-        </div>
-      `).join('');
+
+      closeCollSettings();
+      loadCollections();
     }
 
-    loadEndpoints();
+    loadCollections();
 
     // Auth — SHA-256 of "changeme". Generate a new hash at: https://emn178.github.io/online-tools/sha256.html
     const PASSWORD_HASH = '12b0292dc5023011076e3c335d65cd374b43d5764138c07c4879a306ccc03bcf';

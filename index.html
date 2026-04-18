@@ -9,7 +9,7 @@
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #1a1a2e;
+      background: #061313;
       color: #e0e0e0;
       height: 100vh;
       display: flex;
@@ -18,25 +18,175 @@
 
     header {
       padding: 16px 24px;
-      background: #16213e;
-      border-bottom: 1px solid #0f3460;
+      background: #061313;
+      border-bottom: 1px solid #004747;
       font-size: 18px;
       font-weight: 600;
-      color: #e94560;
+      color: #00bfbf;
     }
 
     .main {
       flex: 1;
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
       padding: 24px;
       gap: 16px;
       overflow: hidden;
     }
 
+    .sidebar {
+      width: 260px;
+      min-width: 260px;
+      background: #061313;
+      border: 1px solid #004747;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .sidebar-header {
+      padding: 12px 16px;
+      border-bottom: 1px solid #004747;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+
+    .sidebar-header span {
+      font-size: 13px;
+      font-weight: 600;
+      color: #fff;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .add-ep-btn {
+      background: #00bfbf;
+      border: none;
+      border-radius: 6px;
+      color: #061313;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 1;
+      padding: 2px 8px;
+      transition: background 0.2s;
+    }
+    .add-ep-btn:hover { background: #009999; }
+
+    .endpoints-list {
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .ep-empty {
+      padding: 20px 16px;
+      color: #445566;
+      font-size: 13px;
+      font-style: italic;
+    }
+
+    .ep-add-form {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding: 10px 12px;
+      border-top: 1px solid #004747;
+      flex-shrink: 0;
+    }
+
+    .ep-new-method {
+      width: 100%;
+      font-size: 12px;
+      padding: 6px 8px;
+    }
+
+    .ep-new-url {
+      flex: 1;
+      font-size: 12px;
+      font-family: "SF Mono", "Fira Code", monospace;
+      padding: 6px 8px;
+      min-width: 0;
+    }
+
+    .ep-add-confirm {
+      background: #00bfbf;
+      border: none;
+      border-radius: 6px;
+      color: #061313;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 10px;
+      white-space: nowrap;
+      transition: background 0.2s;
+    }
+    .ep-add-confirm:hover { background: #009999; }
+
+    .ep-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      cursor: pointer;
+      border-bottom: 1px solid #0f1a30;
+      transition: background 0.15s;
+    }
+    .ep-item:hover { background: #004747; }
+
+    .ep-method {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 5px;
+      border-radius: 3px;
+      font-family: "SF Mono", "Fira Code", monospace;
+      flex-shrink: 0;
+    }
+    .ep-get    { background: #1a3a2a; color: #4ade80; }
+    .ep-post   { background: #2a2a1a; color: #facc15; }
+    .ep-put    { background: #1a2a3a; color: #60a5fa; }
+    .ep-patch  { background: #2a1a3a; color: #c084fc; }
+    .ep-delete { background: #3a1a1a; color: #f87171; }
+
+    .ep-url {
+      flex: 1;
+      font-size: 12px;
+      font-family: "SF Mono", "Fira Code", monospace;
+      color: #aabbcc;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      min-width: 0;
+    }
+
+    .ep-remove {
+      background: none;
+      border: none;
+      color: #445566;
+      cursor: pointer;
+      font-size: 16px;
+      padding: 2px 4px;
+      flex-shrink: 0;
+      transition: color 0.2s;
+      opacity: 0;
+    }
+    .ep-item:hover .ep-remove { opacity: 1; color: #fff; }
+    .ep-remove:hover { color: #fff; }
+
+    .content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      overflow: hidden;
+      min-width: 0;
+    }
+
     .request-panel {
-      background: #16213e;
-      border: 1px solid #0f3460;
+      background: #061313;
+      border: 1px solid #004747;
       border-radius: 8px;
       padding: 20px;
       display: flex;
@@ -53,7 +203,7 @@
     label {
       font-size: 12px;
       font-weight: 600;
-      color: #8888aa;
+      color: #fff;
       text-transform: uppercase;
       letter-spacing: 0.5px;
       white-space: nowrap;
@@ -61,8 +211,8 @@
     }
 
     select, input {
-      background: #0f3460;
-      border: 1px solid #1a4a7a;
+      background: #004747;
+      border: none;
       border-radius: 6px;
       color: #e0e0e0;
       padding: 8px 12px;
@@ -71,13 +221,21 @@
       transition: border-color 0.2s;
     }
 
+    ::placeholder { color: rgba(255,255,255,0.3); }
+
     select:focus, input:focus {
-      border-color: #e94560;
+      border-color: #00bfbf;
     }
 
     select {
       width: 110px;
       cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      padding-right: 32px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23ffffff' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
     }
 
     input.url {
@@ -129,7 +287,7 @@
     .proxy-row input[type="checkbox"] {
       width: 16px;
       height: 16px;
-      accent-color: #e94560;
+      accent-color: #00bfbf;
       cursor: pointer;
     }
 
@@ -152,20 +310,18 @@
     .proxy-off { background: #2a2a3a; color: #666688; }
 
     button.add-header {
-      background: none;
-      border: 1px dashed #1a4a7a;
+      background: #00bfbf;
+      border: none;
       border-radius: 6px;
-      color: #8888aa;
+      color: #061313;
       cursor: pointer;
       font-size: 13px;
-      padding: 5px 14px;
-      transition: border-color 0.2s, color 0.2s;
+      font-weight: 600;
+      padding: 6px 14px;
+      transition: background 0.2s;
     }
 
-    button.add-header:hover {
-      border-color: #e94560;
-      color: #e94560;
-    }
+    button.add-header:hover { background: #009999; }
 
     button.remove-header {
       background: none;
@@ -178,13 +334,13 @@
       transition: color 0.2s;
     }
 
-    button.remove-header:hover { color: #e94560; }
+    button.remove-header:hover { color: #00bfbf; }
 
     button.send {
-      background: #e94560;
+      background: #00bfbf;
       border: none;
       border-radius: 6px;
-      color: white;
+      color: #061313;
       cursor: pointer;
       font-size: 14px;
       font-weight: 600;
@@ -192,13 +348,13 @@
       transition: background 0.2s, opacity 0.2s;
     }
 
-    button.send:hover { background: #c73652; }
+    button.send:hover { background: #009999; }
     button.send:disabled { opacity: 0.5; cursor: not-allowed; }
 
     .response-panel {
       flex: 1;
-      background: #16213e;
-      border: 1px solid #0f3460;
+      background: #061313;
+      border: 1px solid #004747;
       border-radius: 8px;
       display: flex;
       flex-direction: column;
@@ -207,7 +363,7 @@
 
     .response-header {
       padding: 12px 20px;
-      border-bottom: 1px solid #0f3460;
+      border-bottom: 1px solid #004747;
       display: flex;
       align-items: center;
       gap: 12px;
@@ -217,7 +373,7 @@
     .response-header span {
       font-size: 13px;
       font-weight: 600;
-      color: #8888aa;
+      color: #fff;
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
@@ -237,7 +393,7 @@
 
     .time-badge {
       font-size: 12px;
-      color: #8888aa;
+      color: #fff;
       margin-left: auto;
     }
 
@@ -266,12 +422,47 @@
     .json-number { color: #ff9e64; }
     .json-bool   { color: #ff7b72; }
     .json-null   { color: #8b949e; }
+
+    /* Collapsible nodes */
+    .toggle {
+      cursor: pointer;
+      user-select: none;
+      color: #556677;
+      font-size: 10px;
+      margin-right: 2px;
+      display: inline-block;
+      width: 10px;
+      text-align: center;
+    }
+    .toggle:hover { color: #00bfbf; }
+    .collapsible.collapsed .children { display: none; }
+    .summary { display: none; color: #556677; font-style: italic; margin: 0 2px; }
+    .collapsible.collapsed .summary { display: inline; }
   </style>
 </head>
 <body>
   <header>API Tool</header>
 
   <div class="main">
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <span>Endpoints</span>
+      </div>
+      <div class="endpoints-list" id="endpointsList"></div>
+      <div class="ep-add-form">
+        <select id="epNewMethod" class="ep-new-method">
+          <option>GET</option>
+          <option>POST</option>
+          <option>PUT</option>
+          <option>PATCH</option>
+          <option>DELETE</option>
+        </select>
+        <input id="epNewUrl" class="ep-new-url" type="text" placeholder="https://..." onkeydown="if(event.key==='Enter') addEndpointFromForm()" />
+        <button class="ep-add-confirm" onclick="addEndpointFromForm()">Add</button>
+      </div>
+    </div>
+
+    <div class="content">
     <div class="request-panel">
       <div class="row">
         <label>Method</label>
@@ -287,18 +478,20 @@
       </div>
       <div class="proxy-row">
         <label style="min-width:70px">Proxy</label>
-        <input type="checkbox" id="proxyEnabled" onchange="toggleProxy()" />
-        <input type="text" class="proxy-url" id="proxyUrl" value="http://localhost:3001" disabled />
-        <span class="proxy-status proxy-off" id="proxyStatus">off</span>
+        <input type="checkbox" id="proxyEnabled" onchange="toggleProxy()" checked />
+        <input type="text" class="proxy-url" id="proxyUrl" value="http://localhost:3001" />
+        <span class="proxy-status proxy-on" id="proxyStatus">on</span>
       </div>
 
       <div class="headers-section">
         <div class="headers-label-row">
           <label style="min-width:70px">Headers</label>
-          <button class="add-header" onclick="addHeaderRow()">+ Add Header</button>
         </div>
         <div class="headers-list" id="headersList">
           <!-- rows injected by JS -->
+        </div>
+        <div style="padding-left:80px; margin-top:6px;">
+          <button class="add-header" onclick="addHeaderRow()">+ Add Header</button>
         </div>
       </div>
     </div>
@@ -311,6 +504,7 @@
       </div>
       <pre id="responseBody"><span class="placeholder">Response will appear here...</span></pre>
     </div>
+    </div><!-- .content -->
   </div>
 
   <script>
@@ -398,7 +592,7 @@
         // Try to parse and highlight JSON
         try {
           const json = JSON.parse(text);
-          body.innerHTML = syntaxHighlight(JSON.stringify(json, null, 2));
+          body.innerHTML = renderJson(json);
         } catch {
           body.textContent = text;
         }
@@ -416,26 +610,98 @@
       }
     }
 
-    function syntaxHighlight(json) {
-      return json
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(
-          /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g,
-          (match) => {
-            let cls = 'json-number';
-            if (/^"/.test(match)) {
-              cls = /:$/.test(match) ? 'json-key' : 'json-string';
-            } else if (/true|false/.test(match)) {
-              cls = 'json-bool';
-            } else if (/null/.test(match)) {
-              cls = 'json-null';
-            }
-            return `<span class="${cls}">${match}</span>`;
-          }
-        );
+    function esc(s) {
+      return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     }
+
+    function toggleNode(btn) {
+      const node = btn.closest('.collapsible');
+      node.classList.toggle('collapsed');
+      btn.textContent = node.classList.contains('collapsed') ? '▶' : '▼';
+    }
+
+    function renderJson(val, indent = 0) {
+      if (val === null) return `<span class="json-null">null</span>`;
+      if (typeof val === 'boolean') return `<span class="json-bool">${val}</span>`;
+      if (typeof val === 'number') return `<span class="json-number">${val}</span>`;
+      if (typeof val === 'string') return `<span class="json-string">${esc(JSON.stringify(val))}</span>`;
+
+      const pad = '  '.repeat(indent);
+      const inner = '  '.repeat(indent + 1);
+
+      if (Array.isArray(val)) {
+        if (val.length === 0) return `[]`;
+        const count = `${val.length} item${val.length !== 1 ? 's' : ''}`;
+        const items = val.map(v => `${inner}${renderJson(v, indent + 1)}`).join(',\n');
+        return `<span class="collapsible"><span class="toggle" onclick="toggleNode(this)">▼</span>[<span class="summary">${count}</span><span class="children">\n${items}\n${pad}</span>]</span>`;
+      }
+
+      const keys = Object.keys(val);
+      if (keys.length === 0) return `{}`;
+      const count = `${keys.length} key${keys.length !== 1 ? 's' : ''}`;
+      const items = keys.map(k => `${inner}<span class="json-key">${esc(JSON.stringify(k))}</span>: ${renderJson(val[k], indent + 1)}`).join(',\n');
+      return `<span class="collapsible"><span class="toggle" onclick="toggleNode(this)">▼</span>{<span class="summary">${count}</span><span class="children">\n${items}\n${pad}</span>}</span>`;
+    }
+
+    // Endpoints
+    let endpoints = JSON.parse(localStorage.getItem('api-tool-endpoints') || '[]');
+
+    function persistEndpoints() {
+      localStorage.setItem('api-tool-endpoints', JSON.stringify(endpoints));
+    }
+
+    function addEndpoint() {
+      const method = document.getElementById('method').value;
+      const url = document.getElementById('url').value.trim();
+      if (!url) {
+        const inp = document.getElementById('epNewUrl');
+        inp.focus();
+        document.getElementById('epNewMethod').value = method;
+        return;
+      }
+      endpoints.push({ method, url });
+      persistEndpoints();
+      renderEndpoints();
+    }
+
+    function addEndpointFromForm() {
+      const method = document.getElementById('epNewMethod').value;
+      const url = document.getElementById('epNewUrl').value.trim();
+      if (!url) { document.getElementById('epNewUrl').focus(); return; }
+      endpoints.push({ method, url });
+      persistEndpoints();
+      renderEndpoints();
+      document.getElementById('epNewUrl').value = '';
+    }
+
+    function removeEndpoint(i) {
+      endpoints.splice(i, 1);
+      persistEndpoints();
+      renderEndpoints();
+    }
+
+    function selectEndpoint(i) {
+      const ep = endpoints[i];
+      document.getElementById('method').value = ep.method;
+      document.getElementById('url').value = ep.url;
+    }
+
+    function renderEndpoints() {
+      const list = document.getElementById('endpointsList');
+      if (endpoints.length === 0) {
+        list.innerHTML = '<div class="ep-empty">No endpoints saved</div>';
+        return;
+      }
+      list.innerHTML = endpoints.map((ep, i) => `
+        <div class="ep-item" onclick="selectEndpoint(${i})">
+          <span class="ep-method ep-${ep.method.toLowerCase()}">${ep.method}</span>
+          <span class="ep-url">${escAttr(ep.url)}</span>
+          <button class="ep-remove" onclick="event.stopPropagation(); removeEndpoint(${i})" title="Remove">×</button>
+        </div>
+      `).join('');
+    }
+
+    renderEndpoints();
 
     // Allow Enter key to send
     document.addEventListener('keydown', (e) => {

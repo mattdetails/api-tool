@@ -1217,19 +1217,63 @@
     }
 
     let _audioCtx = null;
+    function _ac() {
+      if (!_audioCtx) _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      return _audioCtx;
+    }
+    /* previous hover sound (sine tick):
+    function playHoverTick() {
+      const ctx = _ac();
+      const gain = ctx.createGain(), osc = ctx.createOscillator();
+      osc.type = 'sine'; osc.frequency.value = 1100;
+      gain.gain.setValueAtTime(0.04, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.035);
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.035);
+    } */
     function playHoverTick() {
       try {
-        if (!_audioCtx) _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        const gain = _audioCtx.createGain();
-        const osc = _audioCtx.createOscillator();
-        osc.type = 'sine';
-        osc.frequency.value = 1100;
-        gain.gain.setValueAtTime(0.04, _audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.0001, _audioCtx.currentTime + 0.035);
-        osc.connect(gain);
-        gain.connect(_audioCtx.destination);
-        osc.start(_audioCtx.currentTime);
-        osc.stop(_audioCtx.currentTime + 0.035);
+        const ctx = _ac();
+        const comp = ctx.createDynamicsCompressor();
+        comp.threshold.value = -12; comp.ratio.value = 4;
+        comp.connect(ctx.destination);
+        [440, 880].forEach((freq, i) => {
+          const o = ctx.createOscillator(), g = ctx.createGain();
+          o.type = 'sine'; o.frequency.value = freq;
+          const vol = i === 0 ? 0.0605 : 0.0308;
+          g.gain.setValueAtTime(0, ctx.currentTime);
+          g.gain.linearRampToValueAtTime(vol, ctx.currentTime + 0.002);
+          g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.018);
+          o.connect(g); g.connect(comp);
+          o.start(); o.stop(ctx.currentTime + 0.02);
+        });
+      } catch {}
+    }
+    function playSuccess() {
+      try {
+        const ctx = _ac();
+        [440, 660].forEach((freq, i) => {
+          const o = ctx.createOscillator(), g = ctx.createGain();
+          o.type = 'sine'; o.frequency.value = freq;
+          const t = ctx.currentTime + i * 0.1;
+          g.gain.setValueAtTime(0, t);
+          g.gain.linearRampToValueAtTime(0.06, t + 0.01);
+          g.gain.exponentialRampToValueAtTime(0.0001, t + 0.25);
+          o.connect(g); g.connect(ctx.destination);
+          o.start(t); o.stop(t + 0.25);
+        });
+      } catch {}
+    }
+    function playFail() {
+      try {
+        const ctx = _ac();
+        const o = ctx.createOscillator(), g = ctx.createGain();
+        o.type = 'sine'; o.frequency.setValueAtTime(380, ctx.currentTime);
+        o.frequency.linearRampToValueAtTime(240, ctx.currentTime + 0.2);
+        g.gain.setValueAtTime(0.06, ctx.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.28);
+        o.connect(g); g.connect(ctx.destination);
+        o.start(); o.stop(ctx.currentTime + 0.28);
       } catch {}
     }
 
@@ -1312,6 +1356,7 @@
         const cls = res.status < 300 ? '2xx' : res.status < 400 ? '3xx' : res.status < 500 ? '4xx' : '5xx';
         statusBadge.className = `status-badge status-${cls}`;
         statusBadge.style.display = '';
+        res.status < 400 ? playSuccess() : playFail();
 
         // Time badge
         timeBadge.textContent = `${elapsed} ms`;
@@ -1329,6 +1374,7 @@
         statusBadge.textContent = 'Error';
         statusBadge.className = 'status-badge status-err';
         statusBadge.style.display = '';
+        playFail();
         timeBadge.textContent = `${elapsed} ms`;
         timeBadge.style.display = '';
         body.textContent = `Request failed:\n${err.message}\n\nNote: Some APIs block browser requests due to CORS policy.`;

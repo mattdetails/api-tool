@@ -293,7 +293,7 @@
       transition: color 0.2s;
       opacity: 0;
     }
-    .ep-item:hover .ep-remove { opacity: 1; color: #fff; }
+    .ep-item:hover .ep-remove { opacity: 1; color: #aabbcc; }
     .ep-item[draggable] { cursor: grab; }
     .ep-item[draggable]:active { cursor: grabbing; }
     .ep-item.drag-over { border-top: 2px solid #00bfbf; }
@@ -301,7 +301,8 @@
     .ep-drag-handle { opacity: 0; width: 0; overflow: hidden; transition: opacity 0.15s, width 0.15s; flex-shrink: 0; display: flex; align-items: center; color: #aabbcc; }
     .ep-drag-handle .material-icons { font-size: 16px; }
     .ep-item:hover .ep-drag-handle { opacity: 1; width: 18px; }
-    .ep-remove:hover { color: #fff; }
+    .ep-remove[title="Edit"]:hover { color: #00bfbf; opacity: 1; }
+    .ep-remove[title="Remove"]:hover { color: #f87171; opacity: 1; }
 
     .content {
       flex: 1;
@@ -1348,6 +1349,9 @@
         } else {
           res = await fetch(finalUrl, { method, headers, ...(hasBody ? { body: requestBodyText } : {}) });
         }
+        // Fire sound immediately on status — before waiting for body
+        res.status < 400 ? playSuccess() : playFail();
+
         const elapsed = Math.round(performance.now() - start);
         const text = await res.text();
 
@@ -1356,7 +1360,6 @@
         const cls = res.status < 300 ? '2xx' : res.status < 400 ? '3xx' : res.status < 500 ? '4xx' : '5xx';
         statusBadge.className = `status-badge status-${cls}`;
         statusBadge.style.display = '';
-        res.status < 400 ? playSuccess() : playFail();
 
         // Time badge
         timeBadge.textContent = `${elapsed} ms`;

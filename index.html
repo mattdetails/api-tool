@@ -711,6 +711,332 @@
     .collapsible.collapsed .children { display: none; }
     .summary { display: none; color: #556677; font-style: italic; margin: 0 2px; }
     .collapsible.collapsed .summary { display: inline; }
+
+    /* ==============================================
+       MOBILE RESPONSIVE STYLES
+       Targets: 375px (iPhone SE) through 900px (tablet)
+       ============================================== */
+
+    /* --- Tablet (≤ 900px): tighten layout slightly --- */
+    @media (max-width: 900px) {
+      .main {
+        padding: 16px;
+        gap: 12px;
+      }
+      .sidebar {
+        width: 220px;
+        min-width: 220px;
+      }
+      input.header-name {
+        width: 160px;
+      }
+      .proxy-row input.proxy-url {
+        width: 180px;
+      }
+    }
+
+    /* --- Mobile (≤ 640px): full responsive overhaul --- */
+    @media (max-width: 640px) {
+
+      /* Allow the page to scroll vertically instead of clipping */
+      body {
+        height: auto;
+        min-height: 100vh;
+        overflow-y: auto;
+      }
+
+      /* Header */
+      header {
+        padding: 12px 16px;
+        font-size: 16px;
+      }
+
+      /* Main layout: stack sidebar above content */
+      .main {
+        flex-direction: column;
+        padding: 12px;
+        gap: 12px;
+        overflow: visible;
+        height: auto;
+      }
+
+      /* Sidebar: full-width, limited height, scrolls internally */
+      .sidebar {
+        width: 100%;
+        min-width: unset;
+        max-height: 300px;
+        flex-shrink: 0;
+      }
+
+      /* Content: let it grow naturally, no clipping */
+      .content {
+        overflow: visible;
+        min-height: 0;
+      }
+
+      /* Request panel: tighter padding */
+      .request-panel {
+        padding: 14px;
+        gap: 10px;
+      }
+
+      /* Override CSS-class min-width on all labels */
+      label {
+        min-width: unset;
+      }
+
+      /* Override inline style="min-width:70px" on Proxy and Headers labels */
+      .proxy-row label,
+      .headers-label-row label {
+        min-width: unset !important;
+      }
+
+      /* --- Method / URL / Send row --- */
+      /* Wrap so URL stays on same line as Method, Send drops below */
+      .row {
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      select {
+        min-height: 44px;
+        font-size: 15px;
+      }
+
+      input.url {
+        min-height: 44px;
+        font-size: 15px;
+        /* flex:1 from base styles keeps it filling remaining line space */
+      }
+
+      /* Send button: full width on its own wrapped line */
+      button.send {
+        width: 100%;
+        min-height: 44px;
+        font-size: 15px;
+      }
+
+      /* --- Proxy row --- */
+      .proxy-row {
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .proxy-row input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+      }
+
+      .proxy-row input.proxy-url {
+        width: auto;
+        flex: 1 1 120px;
+        min-height: 44px;
+      }
+
+      /* --- Headers section --- */
+      /* Remove left indent — no room on mobile */
+      .headers-list {
+        padding-left: 0;
+      }
+
+      /* Remove inline padding-left on the "+ Add Header" wrapper div */
+      .headers-section > div[style*="padding-left"] {
+        padding-left: 0 !important;
+        margin-top: 4px;
+      }
+
+      /* Stack name / value inputs vertically */
+      .header-row {
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+
+      input.header-name {
+        width: 100%;
+        min-height: 44px;
+      }
+
+      input.header-value {
+        flex: 1;
+        min-height: 44px;
+      }
+
+      button.add-header {
+        min-height: 44px;
+        width: 100%;
+        font-size: 14px;
+      }
+
+      button.remove-header {
+        min-height: 44px;
+        min-width: 44px;
+      }
+
+      /* --- Response panel --- */
+      /* Give it a solid min-height so it doesn't collapse */
+      .response-panel {
+        min-height: 260px;
+        flex: none;
+      }
+
+      pre {
+        font-size: 12px;
+        overflow-x: auto;
+        word-break: break-word;
+      }
+
+      /* --- Auth overlay --- */
+      .auth-box {
+        padding: 24px 20px;
+        margin: 0 16px;
+        max-width: calc(100% - 32px);
+      }
+
+      .auth-box input {
+        min-height: 44px;
+        font-size: 15px;
+      }
+
+      /* --- Modals: full-width with small margin --- */
+      .modal-box {
+        max-width: calc(100% - 24px);
+        margin: 0 12px;
+        padding: 20px;
+        max-height: 90vh;
+      }
+
+      .confirm-box {
+        max-width: calc(100% - 32px);
+        margin: 0 16px;
+        padding: 20px;
+      }
+
+      .confirm-actions {
+        flex-wrap: wrap;
+      }
+
+      .confirm-cancel,
+      .confirm-delete {
+        min-height: 44px;
+        flex: 1;
+        text-align: center;
+        font-size: 15px;
+      }
+
+      .btn-primary,
+      .btn-secondary {
+        min-height: 44px;
+        font-size: 14px;
+      }
+
+      .modal-actions {
+        flex-wrap: wrap;
+      }
+
+      /* Modal header rows (collection settings): stack inputs */
+      .modal-header-row {
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+
+      /* Override inline flex values so inputs go full-width */
+      .modal-header-row input {
+        flex: 1 1 100% !important;
+        min-height: 44px;
+      }
+
+      .modal-field input {
+        min-height: 44px;
+        font-size: 14px;
+      }
+
+      /* --- Collections sidebar --- */
+
+      /* Always show action buttons — no hover on touch */
+      .coll-actions {
+        opacity: 1;
+      }
+
+      .ep-remove {
+        opacity: 1;
+        color: #334455;
+      }
+
+      /* Touch-friendly tap targets for list items */
+      .ep-item {
+        min-height: 44px;
+        padding: 10px 12px;
+      }
+
+      .ep-item.indented {
+        padding-left: 20px;
+      }
+
+      .collection-header {
+        min-height: 44px;
+      }
+
+      .coll-btn {
+        min-height: 36px;
+        min-width: 36px;
+      }
+
+      .coll-add-ep-row {
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+      }
+
+      .add-ep-btn {
+        min-height: 32px;
+        min-width: 32px;
+      }
+
+      /* Endpoint & collection add forms */
+      .ep-new-method {
+        width: 100%;
+        min-height: 44px;
+        font-size: 14px;
+      }
+
+      .ep-new-url {
+        min-height: 44px;
+        font-size: 14px;
+      }
+
+      .ep-add-confirm {
+        min-height: 44px;
+        font-size: 14px;
+      }
+
+      .coll-add-form {
+        padding: 8px 12px;
+        gap: 8px;
+      }
+
+      /* Collection badge: allow text to wrap */
+      .collection-badge {
+        flex-wrap: wrap;
+        gap: 4px;
+      }
+
+      .badge-base-url {
+        font-size: 10px;
+      }
+
+      /* Response header: let badges wrap if needed */
+      .response-header {
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 10px 14px;
+      }
+
+      .time-badge {
+        font-size: 11px;
+        margin-left: 0;
+        width: 100%;
+      }
+    }
   </style>
 </head>
 <body>

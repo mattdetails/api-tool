@@ -294,13 +294,11 @@
       opacity: 0;
     }
     .ep-item:hover .ep-remove { opacity: 1; color: #fff; }
-    .ep-item[draggable] { cursor: grab; }
-    .ep-item[draggable]:active { cursor: grabbing; }
-    .ep-item.drag-over { border-top: 2px solid #00bfbf; }
-    .ep-item.dragging { opacity: 0.4; }
-    .ep-drag-handle { opacity: 0; width: 0; overflow: hidden; transition: opacity 0.15s, width 0.15s; flex-shrink: 0; display: flex; align-items: center; color: #aabbcc; }
-    .ep-drag-handle .material-icons { font-size: 16px; }
-    .ep-item:hover .ep-drag-handle { opacity: 1; width: 18px; }
+    .ep-order-btns { display: flex; flex-direction: column; gap: 0; opacity: 0; width: 0; overflow: hidden; transition: opacity 0.15s, width 0.15s; flex-shrink: 0; }
+    .ep-item:hover .ep-order-btns { opacity: 1; width: 20px; }
+    .ep-order-btns .ep-remove { opacity: 1; padding: 0; display: flex; align-items: center; justify-content: center; }
+    .ep-order-btns .ep-remove:disabled { color: #334455; cursor: default; }
+    .ep-order-btns .material-icons { font-size: 14px; }
     .ep-remove:hover { color: #fff; }
 
     .content {
@@ -1216,23 +1214,6 @@
       if (!name) row.querySelector('.header-name').focus();
     }
 
-    let _audioCtx = null;
-    function playHoverTick() {
-      try {
-        if (!_audioCtx) _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        const gain = _audioCtx.createGain();
-        const osc = _audioCtx.createOscillator();
-        osc.type = 'sine';
-        osc.frequency.value = 1100;
-        gain.gain.setValueAtTime(0.04, _audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.0001, _audioCtx.currentTime + 0.035);
-        osc.connect(gain);
-        gain.connect(_audioCtx.destination);
-        osc.start(_audioCtx.currentTime);
-        osc.stop(_audioCtx.currentTime + 0.035);
-      } catch {}
-    }
-
     function escAttr(s) {
       return s.replace(/"/g, '&quot;').replace(/</g, '&lt;');
     }
@@ -1442,15 +1423,11 @@
                   </div>
                 </div>
               ` : `
-                <div class="ep-item indented" draggable="true"
-                  onmouseenter="playHoverTick()"
-                  ondragstart="epDragStart(event, '${coll.id}', ${ei})"
-                  ondragover="epDragOver(event)"
-                  ondragleave="epDragLeave(event)"
-                  ondrop="epDrop(event, '${coll.id}', ${ei})"
-                  ondragend="epDragEnd(event)"
-                  onclick="selectEndpoint('${coll.id}', ${ei})">
-                  <span class="ep-drag-handle"><span class="material-icons">drag_indicator</span></span>
+                <div class="ep-item indented" onclick="selectEndpoint('${coll.id}', ${ei})">
+                  <div class="ep-order-btns">
+                    <button class="ep-remove" onclick="event.stopPropagation(); moveEndpoint('${coll.id}', ${ei}, -1)" title="Move up" ${ei === 0 ? 'disabled' : ''}><span class="material-icons">arrow_upward</span></button>
+                    <button class="ep-remove" onclick="event.stopPropagation(); moveEndpoint('${coll.id}', ${ei}, 1)" title="Move down" ${ei === eps.length - 1 ? 'disabled' : ''}><span class="material-icons">arrow_downward</span></button>
+                  </div>
                   <span class="ep-method ep-${ep.method.toLowerCase()}">${ep.method}</span>
                   <span class="ep-label">
                     <span class="ep-name">${escAttr(ep.name || ep.url)}</span>
@@ -1550,51 +1527,26 @@
       loadCollections();
     }
 
-    let dragState = null;
-
-    function epDragStart(event, collId, index) {
-      dragState = { collId, index };
-      event.currentTarget.classList.add('dragging');
-      event.dataTransfer.effectAllowed = 'move';
-    }
-
-    function epDragOver(event) {
-      event.preventDefault();
-      event.dataTransfer.dropEffect = 'move';
-      event.currentTarget.classList.add('drag-over');
-    }
-
-    function epDragLeave(event) {
-      event.currentTarget.classList.remove('drag-over');
-    }
-
-    async function epDrop(event, collId, toIndex) {
-      event.preventDefault();
-      event.currentTarget.classList.remove('drag-over');
-      if (!dragState || dragState.collId !== collId || dragState.index === toIndex) return;
-
-      const coll = collections.find(c => c.id === collId);
+    async function moveEndpoint(collectionId, index, dir) {
+      const coll = collections.find(c => c.id === collectionId);
       if (!coll) return;
       const eps = coll.endpoints;
+      const newIndex = index + dir;
+      if (newIndex < 0 || newIndex >= eps.length) return;
 
       // Assign positions if not set
       eps.forEach((ep, i) => { if (ep.position == null) ep.position = i; });
 
-      // Reorder array
-      const [moved] = eps.splice(dragState.index, 1);
-      eps.splice(toIndex, 0, moved);
+      const a = eps[index], b = eps[newIndex];
+      const tmp = a.position;
+      a.position = b.position;
+      b.position = tmp;
 
-      // Reassign sequential positions
-      await Promise.all(eps.map((ep, i) =>
-        fetch(`${SB_URL}/rest/v1/endpoints?id=eq.${ep.id}`, { method: 'PATCH', headers: SB_HEADERS, body: JSON.stringify({ position: i }) })
-      ));
+      await Promise.all([
+        fetch(`${SB_URL}/rest/v1/endpoints?id=eq.${a.id}`, { method: 'PATCH', headers: SB_HEADERS, body: JSON.stringify({ position: a.position }) }),
+        fetch(`${SB_URL}/rest/v1/endpoints?id=eq.${b.id}`, { method: 'PATCH', headers: SB_HEADERS, body: JSON.stringify({ position: b.position }) }),
+      ]);
       loadCollections();
-    }
-
-    function epDragEnd(event) {
-      event.currentTarget.classList.remove('dragging');
-      document.querySelectorAll('.ep-item.drag-over').forEach(el => el.classList.remove('drag-over'));
-      dragState = null;
     }
 
     function selectEndpoint(collectionId, epIndex) {

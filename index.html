@@ -1334,6 +1334,13 @@
         if (name && value) headers[name] = value;
       });
 
+      // Strip Authorization header for endpoints that don't expect it
+      const noAuthPaths = ['/login/', '/join/'];
+      if (noAuthPaths.some(p => finalUrl.endsWith(p))) {
+        delete headers['Authorization'];
+        delete headers['authorization'];
+      }
+
       const requestBodyText = document.getElementById('requestBody').value.trim();
       const hasBody = requestBodyText && !['GET', 'DELETE'].includes(method);
 

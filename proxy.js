@@ -8,10 +8,11 @@ const { URL } = require('url');
 const PORT = parseInt(process.argv[2] || '3001', 10);
 
 const server = http.createServer((req, res) => {
-  // Allow the browser app to call this proxy
+  // Allow the browser app to call this proxy (including from HTTPS pages via Chrome's Private Network Access)
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Private-Network', 'true');
 
   if (req.method === 'OPTIONS') { res.writeHead(204); res.end(); return; }
   if (req.method !== 'POST' || req.url !== '/proxy') {
@@ -48,7 +49,11 @@ const server = http.createServer((req, res) => {
       headers:  outHeaders,
     };
 
+    console.log(`→ ${method} ${url}`);
+    console.log('  headers:', JSON.stringify(outHeaders));
+
     const proxyReq = lib.request(options, proxyRes => {
+      console.log(`← ${proxyRes.statusCode} ${proxyRes.statusMessage}`);
       // Forward status + all original response headers, plus CORS header
       const fwdHeaders = { ...proxyRes.headers, 'access-control-allow-origin': '*' };
       res.writeHead(proxyRes.statusCode, fwdHeaders);

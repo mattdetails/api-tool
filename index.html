@@ -1336,9 +1336,10 @@
 
       // Strip Authorization header for endpoints that don't expect it
       const noAuthPaths = ['/login/', '/join/'];
-      if (noAuthPaths.some(p => finalUrl.endsWith(p))) {
-        delete headers['Authorization'];
-        delete headers['authorization'];
+      if (noAuthPaths.some(p => finalUrl.includes(p))) {
+        Object.keys(headers).forEach(k => {
+          if (k.toLowerCase() === 'authorization') delete headers[k];
+        });
       }
 
       const requestBodyText = document.getElementById('requestBody').value.trim();

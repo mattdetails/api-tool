@@ -1190,6 +1190,7 @@
         <span>Response</span>
         <span id="statusBadge" class="status-badge" style="display:none"></span>
         <span id="timeBadge" class="time-badge" style="display:none"></span>
+        <button id="copyResponseBtn" onclick="copyResponse()" style="display:none;margin-left:auto;background:none;border:1px solid #004747;color:#00bfbf;border-radius:4px;padding:2px 8px;font-size:11px;cursor:pointer;">Copy</button>
       </div>
       <pre id="responseBody"><span class="placeholder">Response will appear here...</span></pre>
     </div>
@@ -1197,6 +1198,15 @@
   </div>
 
   <script>
+    function copyResponse() {
+      const text = document.getElementById('responseBody').innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = document.getElementById('copyResponseBtn');
+        btn.textContent = 'Copied!';
+        setTimeout(() => btn.textContent = 'Copy', 1500);
+      });
+    }
+
     function switchReqTab(tab) {
       document.getElementById('tabHeaders').classList.toggle('active', tab === 'headers');
       document.getElementById('tabBody').classList.toggle('active', tab === 'body');
@@ -1313,6 +1323,7 @@
       body.innerHTML = '<span class="placeholder">Loading…</span>';
       statusBadge.style.display = 'none';
       timeBadge.style.display = 'none';
+      document.getElementById('copyResponseBtn').style.display = 'none';
 
       // Resolve URL: prepend collection base_url if URL is a path
       const activeColl = collections.find(c => c.id === activeCollectionId);
@@ -1380,6 +1391,7 @@
         } catch {
           body.textContent = text;
         }
+        document.getElementById('copyResponseBtn').style.display = '';
       } catch (err) {
         const elapsed = Math.round(performance.now() - start);
         statusBadge.textContent = 'Error';

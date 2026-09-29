@@ -1191,6 +1191,7 @@
         <span id="statusBadge" class="status-badge" style="display:none"></span>
         <span id="timeBadge" class="time-badge" style="display:none"></span>
         <button id="copyResponseBtn" onclick="copyResponse()" style="display:none;margin-left:auto;background:none;border:1px solid #004747;color:#00bfbf;border-radius:4px;padding:2px 8px;font-size:11px;cursor:pointer;">Copy</button>
+        <button id="downloadResponseBtn" onclick="downloadResponse()" style="display:none;background:none;border:1px solid #004747;color:#00bfbf;border-radius:4px;padding:2px 8px;font-size:11px;cursor:pointer;">Download</button>
       </div>
       <pre id="responseBody"><span class="placeholder">Response will appear here...</span></pre>
     </div>
@@ -1199,6 +1200,20 @@
 
   <script>
     let lastResponseText = '';
+    function downloadResponse() {
+      const url = document.getElementById('url').value.trim();
+      let name = activeEndpoint && activeEndpoint.name && activeEndpoint.url === url ? activeEndpoint.name : '';
+      if (!name) {
+        try { name = new URL(url).pathname.replace(/\/api\/[\d.]+/, ''); } catch { name = url; }
+      }
+      name = name.replace(/[^a-z0-9_-]+/gi, '-').replace(/^-+|-+$/g, '').toLowerCase() || 'response';
+      const blob = new Blob([lastResponseText], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `${name}.json`;
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }
     function copyResponse() {
       navigator.clipboard.writeText(lastResponseText).then(() => {
         const btn = document.getElementById('copyResponseBtn');
@@ -1324,6 +1339,7 @@
       statusBadge.style.display = 'none';
       timeBadge.style.display = 'none';
       document.getElementById('copyResponseBtn').style.display = 'none';
+      document.getElementById('downloadResponseBtn').style.display = 'none';
 
       // Resolve URL: prepend collection base_url if URL is a path
       const activeColl = collections.find(c => c.id === activeCollectionId);
@@ -1394,6 +1410,7 @@
           lastResponseText = text;
         }
         document.getElementById('copyResponseBtn').style.display = '';
+        document.getElementById('downloadResponseBtn').style.display = '';
       } catch (err) {
         const elapsed = Math.round(performance.now() - start);
         statusBadge.textContent = 'Error';
@@ -1453,6 +1470,7 @@
 
     let collections = [];
     let activeCollectionId = null;
+    let activeEndpoint = null;
     let expandedCollections = new Set();
     let addingEpToCollection = null;
     let editingEndpointId = null;
@@ -1673,6 +1691,7 @@
       if (!coll) return;
       const ep = coll.endpoints[epIndex];
       activeCollectionId = collectionId;
+      activeEndpoint = ep;
       document.getElementById('method').value = ep.method;
       document.getElementById('url').value = ep.url || '';
       document.getElementById('requestBody').value = ep.body || '';

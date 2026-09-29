@@ -1198,9 +1198,9 @@
   </div>
 
   <script>
+    let lastResponseText = '';
     function copyResponse() {
-      const text = document.getElementById('responseBody').innerText;
-      navigator.clipboard.writeText(text).then(() => {
+      navigator.clipboard.writeText(lastResponseText).then(() => {
         const btn = document.getElementById('copyResponseBtn');
         btn.textContent = 'Copied!';
         setTimeout(() => btn.textContent = 'Copy', 1500);
@@ -1388,8 +1388,10 @@
         try {
           const json = JSON.parse(text);
           body.innerHTML = renderJson(json);
+          lastResponseText = JSON.stringify(json, null, 2);
         } catch {
           body.textContent = text;
+          lastResponseText = text;
         }
         document.getElementById('copyResponseBtn').style.display = '';
       } catch (err) {

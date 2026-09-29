@@ -1200,6 +1200,7 @@
 
   <script>
     let lastResponseText = '';
+    let lastRequestBody = '';
     function downloadResponse() {
       const url = document.getElementById('url').value.trim();
       let name = activeEndpoint && activeEndpoint.name && activeEndpoint.url === url ? activeEndpoint.name : '';
@@ -1207,10 +1208,18 @@
         try { name = new URL(url).pathname.replace(/\/api\/[\d.]+/, ''); } catch { name = url; }
       }
       name = name.replace(/[^a-z0-9_-]+/gi, '-').replace(/^-+|-+$/g, '').toLowerCase() || 'response';
-      const blob = new Blob([lastResponseText], { type: 'application/json' });
+      saveJsonFile(`${name}.json`, lastResponseText);
+      if (lastRequestBody) {
+        let body = lastRequestBody;
+        try { body = JSON.stringify(JSON.parse(body), null, 2); } catch {}
+        setTimeout(() => saveJsonFile(`${name}-body.json`, body), 300);
+      }
+    }
+
+    function saveJsonFile(filename, text) {
       const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = `${name}.json`;
+      a.href = URL.createObjectURL(new Blob([text], { type: 'application/json' }));
+      a.download = filename;
       a.click();
       URL.revokeObjectURL(a.href);
     }
@@ -1371,6 +1380,7 @@
 
       const requestBodyText = document.getElementById('requestBody').value.trim();
       const hasBody = requestBodyText && !['GET', 'DELETE'].includes(method);
+      lastRequestBody = hasBody ? requestBodyText : '';
 
       const start = performance.now();
       try {
